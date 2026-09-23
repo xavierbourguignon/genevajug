@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GenevaJUG — Prochaine session</title>
+<style>
+  :root{
+    --bg:#12161f;
+    --ink:#eef1f6;
+    --muted:#9aa4b6;
+    --amber:#f2a33d;
+    --sonar-blue:#4f9cff;
+    --line:#2a3140;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  *{box-sizing:border-box;}
+  body{
+    margin:0;height:100%;
+    font-family:'Iowan Old Style','Georgia',serif;
+    background:var(--bg);color:var(--ink);
+    overflow:hidden;
+  }
+  .deck{position:relative;height:100vh;width:100vw;}
+  .slide{
+    position:absolute;inset:0;
+    display:none;flex-direction:column;justify-content:center;
+    padding:8vh 9vw;
+    background:radial-gradient(1100px 600px at 88% -10%, rgba(242,163,61,0.10), transparent 60%), var(--bg);
+  }
+  .slide.active{display:flex;}
+  .slide.sonar{background:radial-gradient(1100px 600px at 88% -10%, rgba(79,156,255,0.14), transparent 60%), var(--bg);}
+  .eyebrow{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:0.78rem;color:var(--amber);letter-spacing:0.02em;margin-bottom:1.1rem;}
+  .slide.sonar .eyebrow{color:var(--sonar-blue);}
+  h1{font-size:clamp(2.2rem,5vw,3.6rem);line-height:1.08;margin:0 0 0.6rem 0;font-weight:600;max-width:16ch;}
+  h2{font-size:clamp(1.5rem,3vw,2rem);margin:0 0 1rem 0;font-weight:600;}
+  .lede{font-size:clamp(1.05rem,1.6vw,1.3rem);color:var(--muted);max-width:62ch;line-height:1.55;}
+  .rule{width:56px;height:2px;background:var(--amber);margin:1.4rem 0;border:none;}
+  .slide.sonar .rule{background:var(--sonar-blue);}
+  .link{color:var(--amber);text-decoration:none;border-bottom:1px solid rgba(242,163,61,0.4);}
+  .slide.sonar .link{color:var(--sonar-blue);border-bottom-color:rgba(79,156,255,0.4);}
+  .bio-box{margin-top:1.8rem;padding:1.2rem 1.5rem;border-left:2px solid var(--line);max-width:58ch;color:var(--muted);font-size:1rem;line-height:1.55;}
+  .footer-index{position:absolute;bottom:calc(1.6rem + env(safe-area-inset-bottom,0px));left:9vw;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:0.8rem;color:var(--muted);}
+  .nav-btn{position:fixed;top:0;bottom:0;width:12%;background:transparent;border:none;cursor:pointer;z-index:5;}
+  .nav-btn.prev{left:0;} .nav-btn.next{right:0;}
+  .progress{position:fixed;top:env(safe-area-inset-top,0px);left:0;height:3px;background:var(--amber);transition:width .25s ease;z-index:6;}
+  .logo{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:0.85rem;color:var(--muted);position:absolute;top:calc(1.6rem + env(safe-area-inset-top,0px));left:9vw;}
+
+  /* Slide 1 - title */
+  .title-mark{display:flex;align-items:center;gap:1.3rem;margin-bottom:0.4rem;}
+  .title-mark img{width:88px;height:88px;object-fit:contain;border-radius:12px;}
+  .wordmark{display:flex;align-items:baseline;gap:0.15rem;}
+  .wordmark .geneva{font-size:clamp(2rem,5.5vw,3.4rem);font-weight:400;color:var(--ink);}
+  .wordmark .jug{font-size:clamp(2rem,5.5vw,3.4rem);font-weight:700;color:var(--amber);}
+  .date-line{margin-top:1.6rem;font-size:1.2rem;color:var(--muted);}
+
+  /* Slide 2 - team */
+  .team-group{margin-bottom:1.5rem;}
+  .team-group h3{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:0.82rem;color:var(--amber);font-weight:600;margin:0 0 0.8rem 0;}
+  .team-row{display:flex;flex-wrap:wrap;gap:1.3rem;}
+  .member{display:flex;align-items:center;gap:0.65rem;}
+  .avatar-wrap{position:relative;width:52px;height:52px;flex-shrink:0;}
+  .avatar-photo{width:52px;height:52px;border-radius:50%;object-fit:cover;border:1px solid var(--line);display:block;}
+  .avatar-fallback{
+    position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+    width:52px;height:52px;border-radius:50%;
+    background:#1c2331;border:1px solid var(--line);
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:0.82rem;color:var(--amber);
+  }
+  .member .name{font-size:0.98rem;color:var(--ink);}
+  .member .role{display:block;font-size:0.78rem;color:var(--muted);}
+
+  /* Slide 5 - speaker photo */
+  .speaker-wrap{display:flex;align-items:center;gap:1.6rem;margin-top:0.5rem;}
+  .speaker-avatar-wrap{position:relative;width:96px;height:96px;flex-shrink:0;}
+  .speaker-photo{width:96px;height:96px;border-radius:50%;object-fit:cover;border:1px solid var(--line);display:block;}
+  .speaker-fallback{
+    position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+    width:96px;height:96px;border-radius:50%;background:#1c2331;border:1px solid var(--line);
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.4rem;color:var(--amber);
+  }
+
+  .sonar-logo{max-width:220px;max-height:80px;object-fit:contain;margin-bottom:1.2rem;}
+
+  @media (max-width:640px){
+    .slide{padding:7vh 7vw;}
+    .team-row{gap:0.9rem;}
+    .title-mark img{width:64px;height:64px;}
+    .sonar-logo{max-width:160px;max-height:60px;}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <div class="slide active" data-i="0">
+    <div class="eyebrow">Session du 24 septembre 2026</div>
+    <div class="title-mark">
+      <img src="https://raw.githubusercontent.com/GenevaJUG/genevajug.github.com/master/public/geneva-jug-duke-181.png"
+           alt="GenevaJUG" onerror="this.style.display='none'">
+    </div>
+    <div class="wordmark"><span class="geneva">Geneva</span><span class="jug">JUG</span></div>
+    <div class="date-line">Jeudi 24 septembre 2026 · 19h00 – 21h00</div>
+    <hr class="rule">
+  </div>
+
+  <div class="slide" data-i="1">
+    <div class="logo">GenevaJUG</div>
+    <div class="eyebrow">L'équipe</div>
+    <h2>Qui fait vivre le GenevaJUG</h2>
+
+    <div class="team-group">
+      <h3>Bureau</h3>
+      <div class="team-row">
+        <div class="member">
+          <div class="avatar-wrap">
+            <img class="avatar-photo" src="https://genevajug.org/team/maxime_nowak.jpg" alt="Maxime Nowak" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback">MN</div>
+          </div>
+          <div><span class="name">Maxime Nowak</span><span class="role">Président</span></div>
+        </div>
+        <div class="member">
+          <div class="avatar-wrap">
+            <img class="avatar-photo" src="https://genevajug.org/team/vincent_sevel.jpg" alt="Vincent Sevel" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback">VS</div>
+          </div>
+          <div><span class="name">Vincent Sevel</span><span class="role">Trésorier</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="team-group">
+      <h3>Crew</h3>
+      <div class="team-row">
+        <div class="member">
+          <div class="avatar-wrap">
+            <img class="avatar-photo" src="https://genevajug.org/team/andreas_cretois.jpg" alt="Andréas Crétois" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback">AC</div>
+          </div>
+          <span class="name">Andréas Crétois</span>
+        </div>
+        <div class="member">
+          <div class="avatar-wrap">
+            <img class="avatar-photo" src="https://genevajug.org/team/ludovic_bertin.jpg" alt="Ludovic Bertin" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback">LB</div>
+          </div>
+          <span class="name">Ludovic Bertin</span>
+        </div>
+        <div class="member">
+          <div class="avatar-wrap">
+            <img class="avatar-photo" src="https://genevajug.org/team/evgeny_mandrikov.jpg" alt="Evgeny Mandrikov" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback">EM</div>
+          </div>
+          <span class="name">Evgeny Mandrikov</span>
+        </div>
+        <div class="member">
+          <div class="avatar-wrap">
+            <img class="avatar-photo" src="https://genevajug.org/team/julia_mateo.jpg" alt="Julia Mateo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback">JM</div>
+          </div>
+          <span class="name">Julia Mateo</span>
+        </div>
+        <div class="member">
+          <div class="avatar-wrap">
+            <img class="avatar-photo" src="https://genevajug.org/team/margarita_nedzelska.jpg" alt="Margarita Nedzelska" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback">MN</div>
+          </div>
+          <span class="name">Margarita Nedzelska</span>
+        </div>
+        <div class="member">
+          <div class="avatar-wrap">
+            <img class="avatar-photo" src="https://genevajug.org/team/valerie_sevel.jpg" alt="Valerie Sevel" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback">VS</div>
+          </div>
+          <span class="name">Valerie Sevel</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide sonar" data-i="2">
+    <div class="logo">GenevaJUG</div>
+    <div class="eyebrow">Merci à notre hôte</div>
+    <img class="sonar-logo" src="https://zeroheight-uploads.s3.eu-west-1.amazonaws.com/2579ceba9491da7742d1c2?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA3AVNYHQKWXNYIVGF%2F20260923%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20260923T194747Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=27161c8bf10882af4412a802eb5a5ec02d9b65d4855afc1659905dc5bc881212" alt="Sonar" onerror="this.style.display='none';document.getElementById('sonar-h1').style.display='block';">
+    <h1 id="sonar-h1" style="display:none;">Sonar</h1>
+    <p class="lede">
+      Un grand merci à Sonar de nous accueillir ce soir dans ses locaux de
+      Chemin de Blandonnet, à Vernier, pour cette session.
+    </p>
+    <hr class="rule">
+    <a class="link" href="https://www.sonarsource.com" target="_blank" rel="noopener">sonarsource.com</a>
+  </div>
+
+  <div class="slide" data-i="3">
+    <div class="logo">GenevaJUG</div>
+    <div class="eyebrow">Le sujet du jour</div>
+    <h1>Deploying to production with confidence</h1>
+    <p class="lede">
+      Est-on jamais vraiment sûr que le logiciel en production est assez robuste
+      face aux vulnérabilités ? SBOM, SLSA, builds reproductibles, sécurité CI/CD :
+      la session revient sur ces concepts de sécurité de la chaîne logicielle
+      et sur la manière de les appliquer à vos propres projets.
+    </p>
+  </div>
+
+  <div class="slide" data-i="4">
+    <div class="logo">GenevaJUG</div>
+    <div class="eyebrow">L'intervenant</div>
+    <div class="speaker-wrap">
+      <div class="speaker-avatar-wrap">
+        <img class="speaker-photo" src="https://genevajug.org/speakers/andres_almiray.jpg" alt="Andres Almiray" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="speaker-fallback">AA</div>
+      </div>
+      <h2 style="margin:0;">Andres Almiray</h2>
+    </div>
+    <div class="bio-box">
+      Développeur Java/Groovy et Java Champion, plus de vingt ans d'expérience
+      en conception logicielle. Membre fondateur du framework Griffon et de la
+      communauté Hackergarten, auteur de JReleaser, contributeur historique de
+      projets open source comme Groovy et DbUnit.
+    </div>
+  </div>
+
+</div>
+
+<div class="progress" id="progress"></div>
+<button class="nav-btn prev" id="prevBtn" aria-label="Précédent"></button>
+<button class="nav-btn next" id="nextBtn" aria-label="Suivant"></button>
+<div class="footer-index" id="idx"></div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const progress = document.getElementById('progress');
+  const idx = document.getElementById('idx');
+  function render(){
+    slides.forEach((s,i)=>s.classList.toggle('active', i===cur));
+    progress.style.width = ((cur+1)/total*100)+'%';
+    idx.textContent = (cur+1)+' / '+total;
+  }
+  function go(delta){ cur = Math.min(total-1, Math.max(0, cur+delta)); render(); }
+  document.getElementById('prevBtn').addEventListener('click', ()=>go(-1));
+  document.getElementById('nextBtn').addEventListener('click', ()=>go(1));
+  document.addEventListener('keydown', (e)=>{
+    if(e.key==='ArrowRight'||e.key===' ') go(1);
+    if(e.key==='ArrowLeft') go(-1);
+  });
+  render();
+</script>
+</body>
+</html>
