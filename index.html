@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>GenevaJUG</title>
+<title>GenevaJUG — Prochaine session</title>
 <style>
   :root{
     --bg:#12161f;
@@ -26,10 +26,12 @@
   .deck{position:relative;height:100vh;width:100vw;}
   .slide{
     position:absolute;inset:0;
-    display:none;flex-direction:column;justify-content:center;
-    padding:8vh 9vw;
+    display:none;flex-direction:column;justify-content:center;align-items:flex-start;
+    text-align:left;
+    padding:8vh 20vw;
     background:radial-gradient(1100px 600px at 88% -10%, rgba(242,163,61,0.10), transparent 60%), var(--bg);
   }
+  .slide[data-i="0"]{align-items:center;text-align:center;}
   .slide.active{display:flex;}
   .slide.sonar{background:radial-gradient(1100px 600px at 88% -10%, rgba(79,156,255,0.14), transparent 60%), var(--bg);}
   .eyebrow{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:0.78rem;color:var(--amber);letter-spacing:0.02em;margin-bottom:1.1rem;}
@@ -42,11 +44,11 @@
   .link{color:var(--amber);text-decoration:none;border-bottom:1px solid rgba(242,163,61,0.4);}
   .slide.sonar .link{color:var(--sonar-blue);border-bottom-color:rgba(79,156,255,0.4);}
   .bio-box{margin-top:1.8rem;padding:1.2rem 1.5rem;border-left:2px solid var(--line);max-width:58ch;color:var(--muted);font-size:1rem;line-height:1.55;}
-  .footer-index{position:absolute;bottom:calc(1.6rem + env(safe-area-inset-bottom,0px));left:9vw;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:0.8rem;color:var(--muted);}
+  .footer-index{position:absolute;bottom:calc(1.6rem + env(safe-area-inset-bottom,0px));left:20vw;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:0.8rem;color:var(--muted);}
   .nav-btn{position:fixed;top:0;bottom:0;width:12%;background:transparent;border:none;cursor:pointer;z-index:5;}
   .nav-btn.prev{left:0;} .nav-btn.next{right:0;}
   .progress{position:fixed;top:env(safe-area-inset-top,0px);left:0;height:3px;background:var(--amber);transition:width .25s ease;z-index:6;}
-  .logo{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:0.85rem;color:var(--muted);position:absolute;top:calc(1.6rem + env(safe-area-inset-top,0px));left:9vw;}
+  .logo{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:0.85rem;color:var(--muted);position:absolute;top:calc(1.6rem + env(safe-area-inset-top,0px));left:20vw;}
 
   /* Slide 1 - title */
   .title-mark{display:flex;align-items:center;gap:1.3rem;margin-bottom:0.4rem;}
@@ -88,6 +90,7 @@
 
   @media (max-width:640px){
     .slide{padding:7vh 7vw;}
+    .logo,.footer-index{left:7vw;}
     .team-row{gap:1rem;}
     .title-mark img{width:88px;height:88px;}
     .sonar-logo{max-width:220px;max-height:90px;}
@@ -139,17 +142,17 @@
       <div class="team-row">
         <div class="member">
           <div class="avatar-wrap">
-            <img class="avatar-photo" src="https://genevajug.org/team/andreas_cretois.jpg" alt="Andréas Crétois" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-            <div class="avatar-fallback">AC</div>
-          </div>
-          <span class="name">Andréas Crétois</span>
-        </div>
-        <div class="member">
-          <div class="avatar-wrap">
             <img class="avatar-photo" src="https://genevajug.org/team/ludovic_bertin.jpg" alt="Ludovic Bertin" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
             <div class="avatar-fallback">LB</div>
           </div>
           <span class="name">Ludovic Bertin</span>
+        </div>
+        <div class="member">
+          <div class="avatar-wrap">
+            <img class="avatar-photo" src="https://genevajug.org/team/andreas_cretois.jpg" alt="Andréas Crétois" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="avatar-fallback">AC</div>
+          </div>
+          <span class="name">Andréas Crétois</span>
         </div>
         <div class="member">
           <div class="avatar-wrap">
@@ -191,9 +194,10 @@
     <img class="sonar-logo" src="https://zeroheight-uploads.s3.eu-west-1.amazonaws.com/2579ceba9491da7742d1c2?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA3AVNYHQKWXNYIVGF%2F20260923%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20260923T194747Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=27161c8bf10882af4412a802eb5a5ec02d9b65d4855afc1659905dc5bc881212" alt="Sonar" onerror="this.style.display='none';document.getElementById('sonar-h1').style.display='block';">
     <h1 id="sonar-h1" style="display:none;">Sonar</h1>
     <p class="lede">
-      Un grand merci à Sonar de nous accueillir ce soir dans ses locaux et d'offrir le buffet.
+      Un grand merci à Sonar de nous accueillir ce soir dans ses locaux.
     </p>
     <hr class="rule">
+    <a class="link" href="https://www.sonarsource.com" target="_blank" rel="noopener">sonarsource.com</a>
   </div>
 
   <div class="slide" data-i="3">
